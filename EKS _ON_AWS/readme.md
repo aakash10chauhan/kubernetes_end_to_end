@@ -31,108 +31,59 @@ AWS manages:
 ## Worker Nodes in EKS
 
 EKS worker nodes can be run using:
+can be setup using 3 way 
 
 * **Amazon EC2** (Managed or Self-managed node groups)
 * **AWS Fargate** (Serverless, no node management)
 
----
+self-managed nodes 
+users must provision manually EC2 instances 
+installed >kubelet >>kube proxy >>c runtime 
 
-## Ways to Create an EKS Cluster
 
-You can create an EKS cluster using:
+managed node group 
+aws managed everthing 
+>>easy to maage creted update delete
+>>managed by using autoscalling groups 
 
-* **AWS Management Console (GUI)**
-* **eksctl CLI** (recommended – easy and fast)
+fargae 
 
----
+follows serverless structure 
 
-## Creating an EKS Cluster Using the AWS Console (GUI)
 
-1. Go to **AWS Console → EKS**
-2. Click **Create cluster**
-3. If you already have a cluster elsewhere, you can choose **Register cluster**
-4. Choose **Custom configuration**
-5. Enter the **Cluster name**
-6. Create a new **IAM role** and select it from the dropdown
-7. Ensure both required roles are created and selected
-8. Click **Next**
-9. For **Cluster endpoint access**, choose **Public**
-10. Click **Next**
-11. Under **Add-ons**, select:
 
-    * kube-proxy
-    * CoreDNS
-    * Amazon VPC CNI
-12. Click **Next**
-13. Leave defaults for remaining settings
-14. Review the configuration
-15. Click **Create**
+steps to perform the practicals 
+lets start guys 
 
-⏳ Cluster creation takes approximately **5 minutes**.
+connect your ec2 instance ubuntu 
 
----
 
-## Deploying Applications to EKS
+we need to install  aws cli, kubectl ,
+sudo apt update 
 
-The AWS Console **cannot be used to deploy Kubernetes applications**.
+curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+sudo apt install unzip
+unzip awscliv2.zip
+sudo ./aws/install -i /usr/local/aws-cli -b /usr/local/bin --update
 
-To deploy applications, you need Kubernetes tools.
+sudo apt-get update
+sudo apt install docker.io
+docker ps
+sudo chown $USER /var/run/docker.sock
 
-### Required Tools
+Install kubectl
 
-* **AWS CLI**
-* **eksctl**
-* **kubectl**
+curl -o kubectl https://amazon-eks.s3.us-west-2.amazonaws.com/1.19.6/2021-01-05/bin/linux/amd64/kubectl
+chmod +x ./kubectl
+sudo mv ./kubectl /usr/local/bin
+kubectl version --short --client
 
----
 
-## Creating an EKS Cluster Using CLI (`eksctl`)
 
-### Command to Create Cluster
+Install eksctl
 
-```bash
-eksctl create cluster \
-  --name my-cluster \
-  --region us-east-1 \
-  --nodegroup-name my-nodes \
-  --node-type t3.medium \
-  --nodes 2
-```
+curl --silent --location "https://github.com/weaveworks/eksctl/releases/latest/download/eksctl_$(uname -s)_amd64.tar.gz" | tar xz -C /tmp
+sudo mv /tmp/eksctl /usr/local/bin
+eksctl version
 
-This command automatically:
 
-* Creates VPC and networking
-* Creates the EKS control plane
-* Creates a managed node group
-* Configures `kubectl` access
-
----
-
-### Verify Cluster Creation
-
-```bash
-kubectl get nodes
-```
-
-If nodes are listed, your cluster is ready ✅
-
----
-
-## Summary
-
-* EKS control plane is fully managed by AWS
-* Worker nodes can run on EC2 or Fargate
-* Cluster creation can be done via **GUI or CLI**
-* Application deployment requires **kubectl / Helm / GitOps tools**
-* `eksctl` is the easiest and fastest way to create EKS clusters
-
----
-
-If you want, I can:
-
-* Add **architecture diagrams**
-* Add **sample app deployment YAML**
-* Convert this into **Terraform**
-* Add **IAM & security best practices**
-
-Just say the word 😄

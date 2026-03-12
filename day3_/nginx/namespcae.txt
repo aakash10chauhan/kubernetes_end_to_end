@@ -1,65 +1,261 @@
 
 
- kubectl  apply -f namespace.yml
+# Kubernetes Practical Steps Guide
 
-kubectl get ns 
+Using Kubernetes and the kubectl CLI.
 
- kubectl  apply -f pod.yml
+---
 
- kubectl get pods 
+# 1️⃣ Create Namespace
 
- kubectl get pods -n nginx 
+Apply the namespace configuration:
 
-to get inside your container in same way to get inside your pods 
+```bash
+kubectl apply -f namespace.yml
+```
 
+Check the namespaces:
 
+```bash
+kubectl get ns
+```
+
+---
+
+# 2️⃣ Create Pod
+
+Create a pod using the YAML file:
+
+```bash
+kubectl apply -f pod.yml
+```
+
+Check all pods:
+
+```bash
+kubectl get pods
+```
+
+Check pods in the **nginx namespace**:
+
+```bash
+kubectl get pods -n nginx
+```
+
+---
+
+# 3️⃣ Access the Pod (Container Shell)
+
+To get inside the pod container:
+
+```bash
 kubectl exec -it pod/nginx-pod -n nginx -- bash
+```
 
-now you will be insde your pods 
+Now you are **inside the pod**.
 
-now do 
->curl 127.0.0.1
+Run the following command:
 
-kubectl describe pod/nginx-pod -n nginx 
-but we are going to access it using the services 
+```bash
+curl 127.0.0.1
+```
 
+This will test the nginx server running inside the container.
 
+---
+
+# 4️⃣ Describe the Pod
+
+To see detailed pod information:
+
+```bash
+kubectl describe pod/nginx-pod -n nginx
+```
+
+---
+
+# 5️⃣ Deploy Using Deployment
+
+Now create a deployment:
+
+```bash
 kubectl apply -f deploy.yml
+```
 
-kubectl get deployment -n nginx 
+Check deployment:
 
-kubectl get pods -n nginx 
+```bash
+kubectl get deployment -n nginx
+```
 
+Check pods created by deployment:
+
+```bash
+kubectl get pods -n nginx
+```
+
+---
+
+# 6️⃣ Scale the Deployment
+
+Increase the number of replicas:
+
+```bash
 kubectl scale deployment/nginx-deployment -n nginx --replicas=5
+```
 
- kubectl get deployments -n nginx
- kubectl get deployments -n nginx -o wide
+Check deployments:
 
- kubectl set image deployment/nginx-deployment -n nginx nginx=nginx:1.27.3
+```bash
+kubectl get deployments -n nginx
+```
 
- kubectl get pods -n nginx
+Detailed view:
 
-this is called rolling update as it does not do everthing changes at once it dones tins slowlly 
-this is there in deploymnts sets only 
+```bash
+kubectl get deployments -n nginx -o wide
+```
 
- kubectl rollout status deployment -n nginx
- check the rollout status 
+---
 
+# 7️⃣ Perform Rolling Update
+
+Update the nginx image:
+
+```bash
+kubectl set image deployment/nginx-deployment -n nginx nginx=nginx:1.27.3
+```
+
+Check pods again:
+
+```bash
+kubectl get pods -n nginx
+```
+
+This process is called **Rolling Update**, because changes happen gradually instead of updating everything at once.
+Rolling updates are available only in **Deployments**.
+
+---
+
+# 8️⃣ Check Rollout Status
+
+Verify deployment rollout status:
+
+```bash
+kubectl rollout status deployment -n nginx
+```
+
+---
+
+# 9️⃣ Delete the Deployment
+
+Delete everything created by the deployment file:
+
+```bash
 kubectl delete -f deploy.yml
-delete everthing 
+```
 
-and create replica sets 
- kubectl apply -f replica.yml
+---
 
- here you cannot rollback and roll out 
+# 🔟 Create ReplicaSet
 
+Apply ReplicaSet configuration:
+
+```bash
+kubectl apply -f replica.yml
+```
+
+Important:
+
+ReplicaSets **do not support rolling updates or rollbacks** like deployments.
+
+Check ReplicaSets:
+
+```bash
 kubectl get replicasets -n nginx
+```
 
+Check pods:
 
- kubectl get pods -n nginx -o wide
+```bash
+kubectl get pods -n nginx -o wide
+```
 
- deamonset make sure each pods run in one worker node 
- here we dont need to define the replicas as it will cretae the no of node so it will create 3 pods 
+---
 
+# 1️⃣1️⃣ DaemonSet
 
-jobs 
+A **DaemonSet** ensures that **one pod runs on each worker node**.
+
+Example:
+
+If there are **3 worker nodes**, it automatically creates **3 pods**.
+
+You **do not need to define replicas**.
+
+---
+
+# 1️⃣2️⃣ Create Service
+
+Apply the service configuration:
+
+```bash
+kubectl apply -f servie.yml
+```
+
+Check all resources:
+
+```bash
+kubectl get all -n nginx
+```
+
+Check services:
+
+```bash
+kubectl get service -n nginx
+```
+
+---
+
+# 1️⃣3️⃣ Access Application from Browser
+
+Use port forwarding:
+
+```bash
+kubectl port-forward service/nginx-service -n nginx 80:80 --address=0.0.0.0
+```
+
+If it does not work:
+
+```bash
+sudo -E kubectl port-forward service/nginx-service -n nginx 80:80 --address=0.0.0.0
+```
+
+Now you can access the application from your **browser using port 80**.
+
+---
+
+# 1️⃣4️⃣ Run Port Forward in Background (Optional)
+
+Run it in the background:
+
+```bash
+kubectl port-forward service/nginx-service -n nginx 80:80 --address=0.0.0.0 &
+```
+
+---
+
+✅ This guide covers:
+
+* Namespace
+* Pod creation
+* Container access
+* Deployment
+* Scaling
+* Rolling updates
+* ReplicaSets
+* DaemonSets
+* Services
+* Port forwarding
+
+---

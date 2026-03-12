@@ -29,3 +29,37 @@ kubectl apply -f deploy.yml
 kubectl get deployment -n nginx 
 
 kubectl get pods -n nginx 
+
+kubectl scale deployment/nginx-deployment -n nginx --replicas=5
+
+ kubectl get deployments -n nginx
+ kubectl get deployments -n nginx -o wide
+
+ kubectl set image deployment/nginx-deployment -n nginx nginx=nginx:1.27.3
+
+ kubectl get pods -n nginx
+
+this is called rolling update as it does not do everthing changes at once it dones tins slowlly 
+this is there in deploymnts sets only 
+
+ kubectl rollout status deployment -n nginx
+ check the rollout status 
+
+kubectl delete -f deploy.yml
+delete everthing 
+
+and create replica sets 
+ kubectl apply -f replica.yml
+
+ here you cannot rollback and roll out 
+
+kubectl get replicasets -n nginx
+
+
+ kubectl get pods -n nginx -o wide
+
+ deamonset make sure each pods run in one worker node 
+ here we dont need to define the replicas as it will cretae the no of node so it will create 3 pods 
+
+
+jobs 

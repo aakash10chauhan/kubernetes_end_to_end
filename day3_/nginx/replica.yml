@@ -2,9 +2,9 @@
 # refer these for deploymetns 
 
 apiVersion: apps/v1
-kind: Deployment
+kind: ReplicaSet
 metadata:
-  name: nginx-deployment
+  name: nginx-replicaset
   namespace: nginx
 
 spec: 
@@ -14,7 +14,7 @@ spec:
       app: nginx
   template:
     metadata:
-      name: nginx-temp
+      name: nginx-rep-pod
       labels:
        app: nginx
     spec:

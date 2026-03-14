@@ -1,0 +1,27 @@
+kubectl create ns nginx
+
+ kubectl get ns 
+
+ kubectl get pods
+
+kubectl run nginx --image=nginx -n nginx
+
+ kubectl create deployment nginx --image=nginx --replicas=2 -n nginx
+
+kubectl get deployment -n nginx
+
+
+ kubectl expose deployment nginx --type=ClusterIP --port=80 --target-port=80 -n nginx
+
+
+sudo -E kubectl port-forward svc/nginx -n nginx 8080:80 --address=0.0.0.0 &
+
+to update the images 
+
+kubectl set image deployment/nginx-deployment -n nginx nginx=nginx:1.27.3
+
+run these and again re start tese using the 
+
+sudo -E kubectl port-forward svc/nginx -n nginx 8080:80 --address=0.0.0.0 &
+
+and you are done 

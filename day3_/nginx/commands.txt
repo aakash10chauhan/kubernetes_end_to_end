@@ -1,0 +1,56 @@
+vi ns.yml
+    5  kubectl apply -f ns.yml
+    6  vi dep.yml
+    7  kubectl apply -f dep.yml 
+    8  kubectl get pods 
+    9  kubectl get pods  -n nginx
+   10  vi ser.yml
+   11  kubectl apply -f ser.yml 
+   12  kubectl get all -n nginx
+   13  kubectl port-forward svc/nginx-service -n nginx 5000:5000 --address=0.0.0.0 &
+
+   access the website 
+   
+   14  kubectl set image deployment.apps/nginx-deployment -n nginx nginx=allenaira/node_route:latest 
+
+   to check if the roll back happens sucessfully or not 
+   14 kubectl rollout status deployment.apps/nginx-deployment -n nginx
+
+
+   access it using the website 
+   15  kubectl get all -n nginx
+   16  kubectl get pods -o wide -n nginx 
+
+      now lets see the chnages inside the files 
+   17  ls
+   18  kubectl diff -f dep.yml 
+
+now lets see what access do we have using the config commands 
+   19  kubectl config current-context
+   20  kubectl config view
+   21  kubectl config get-clusters
+   22  kubectl config get-contexts
+
+   now lets scalle the container 
+   23  kubectl get all -n nginx
+   24  kubectl scale deployment.apps/nginx-deployment -n nginx --replicas=3
+   25  kubectl get all -n nginx
+
+to go to the perious version of the images  
+   28  kubectl rollout undo deployment.apps/nginx-deployment -n nginx 
+   29  kubectl get all -n nginx
+
+to verify it 
+   31  kubectl diff -f dep.yml 
+   32  cat dep.yml 
+   33  kubectl get all -n nginx
+
+   f you cannot access the website using the ip then check the logs 
+   35  kubectl logs pod/nginx-deployment-7b4b6db584-8wckn -n nginx 
+
+if there is no error in the pods the reforward the app again 
+   38  kubectl port-forward svc/nginx-service -n nginx 5000:5000 --address=0.0.0.0 &
+   39  history 
+
+
+   and you are done!!!
